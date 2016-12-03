@@ -320,6 +320,7 @@ static __ref int do_sampling(void *data)
 		if (!poll_ms)
 			goto unlock;
 
+<<<<<<< HEAD
 		if (charging_detected()) {
 			schedule_delayed_work(&sampling_work,
 				msecs_to_jiffies(poll_ms));
@@ -328,6 +329,11 @@ static __ref int do_sampling(void *data)
 				&sampling_work,
 				msecs_to_jiffies(poll_ms));
 		}
+=======
+		queue_delayed_work(system_power_efficient_wq,
+			&sampling_work,
+			msecs_to_jiffies(poll_ms));
+>>>>>>> 832e4d3... qcom: msm-core: queue work on system_power_efficient_wq
 unlock:
 		mutex_unlock(&kthread_update_mutex);
 	}
