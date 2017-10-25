@@ -1806,13 +1806,8 @@ static int set_prop_jeita_temp(struct fg_chip *chip,
 
 	cancel_delayed_work_sync(
 		&chip->update_jeita_setting);
-	if (charging_detected()) {
-		schedule_delayed_work(
-			&chip->update_jeita_setting, 0);
-	} else {
-		queue_delayed_work(system_power_efficient_wq,
-			&chip->update_jeita_setting, 0);
-	}
+	schedule_delayed_work(
+		&chip->update_jeita_setting, 0);
 
 	return rc;
 }
@@ -2088,15 +2083,9 @@ wait:
 	update_sram_data(chip, &resched_ms);
 
 out:
-	if (charging_detected()) {
-		schedule_delayed_work(
-			&chip->update_sram_data,
-			msecs_to_jiffies(resched_ms));
-	} else {
-		queue_delayed_work(system_power_efficient_wq,
-			&chip->update_sram_data,
-			msecs_to_jiffies(resched_ms));
-	}
+	schedule_delayed_work(
+		&chip->update_sram_data,
+		msecs_to_jiffies(resched_ms));
 }
 
 #define BATT_TEMP_OFFSET	3
@@ -2175,17 +2164,9 @@ out:
 		if (rc)
 			pr_err("failed to write BATT_TEMP_OFF rc=%d\n", rc);
 	}
-
-	if (charging_detected()) {
-		schedule_delayed_work(
-			&chip->update_temp_work,
-			msecs_to_jiffies(TEMP_PERIOD_UPDATE_MS));
-	} else {
-		queue_delayed_work(system_power_efficient_wq,
-			&chip->update_temp_work,
-			msecs_to_jiffies(TEMP_PERIOD_UPDATE_MS));
-	}
-
+	schedule_delayed_work(
+		&chip->update_temp_work,
+		msecs_to_jiffies(TEMP_PERIOD_UPDATE_MS));
 	fg_relax(&chip->update_temp_wakeup_source);
 }
 
@@ -3330,14 +3311,8 @@ static void status_change_work(struct work_struct *work)
 		 */
 		if (chip->last_sram_update_time + 5 < current_time) {
 			cancel_delayed_work(&chip->update_sram_data);
-			if (charging_detected()) {
-				schedule_delayed_work(&chip->update_sram_data,
-					msecs_to_jiffies(0));
-			} else {
-				queue_delayed_work(system_power_efficient_wq,
-					&chip->update_sram_data,
-					msecs_to_jiffies(0));
-			}
+			schedule_delayed_work(&chip->update_sram_data,
+				msecs_to_jiffies(0));
 		}
 		if (chip->cyc_ctr.en)
 			schedule_work(&chip->cycle_count_work);
@@ -3832,15 +3807,9 @@ static irqreturn_t fg_batt_missing_irq_handler(int irq, void *_chip)
 			INIT_COMPLETION(chip->batt_id_avail);
 			schedule_work(&chip->batt_profile_init);
 			cancel_delayed_work(&chip->update_sram_data);
-			if (charging_detected()) {
-				schedule_delayed_work(
-					&chip->update_sram_data,
-					msecs_to_jiffies(0));
-			} else {
-				queue_delayed_work(system_power_efficient_wq,
-					&chip->update_sram_data,
-					msecs_to_jiffies(0));
-			}
+			schedule_delayed_work(
+				&chip->update_sram_data,
+				msecs_to_jiffies(0));
 		} else {
 			chip->battery_missing = false;
 		}
@@ -3949,14 +3918,8 @@ static irqreturn_t fg_empty_soc_irq_handler(int irq, void *_chip)
 		pr_info("triggered 0x%x\n", soc_rt_sts);
 	if (fg_is_batt_empty(chip)) {
 		fg_stay_awake(&chip->empty_check_wakeup_source);
-		if (charging_detected()) {
-			schedule_delayed_work(&chip->check_empty_work,
-				msecs_to_jiffies(FG_EMPTY_DEBOUNCE_MS));
-		} else {
-			queue_delayed_work(system_power_efficient_wq,
-				&chip->check_empty_work,
-				msecs_to_jiffies(FG_EMPTY_DEBOUNCE_MS));
-		}
+		schedule_delayed_work(&chip->check_empty_work,
+			msecs_to_jiffies(FG_EMPTY_DEBOUNCE_MS));
 	} else {
 		chip->soc_empty = false;
 	}
@@ -6095,15 +6058,9 @@ static void delayed_init_work(struct work_struct *work)
 	/* release memory access before update_sram_data is called */
 	fg_mem_release(chip);
 
-	if (charging_detected()) {
-		schedule_delayed_work(
-			&chip->update_jeita_setting,
-			msecs_to_jiffies(INIT_JEITA_DELAY_MS));
-	} else {
-		queue_delayed_work(system_power_efficient_wq,
-			&chip->update_jeita_setting,
-			msecs_to_jiffies(INIT_JEITA_DELAY_MS));
-	}
+	schedule_delayed_work(
+		&chip->update_jeita_setting,
+		msecs_to_jiffies(INIT_JEITA_DELAY_MS));
 
 	if (chip->last_sram_update_time == 0)
 		update_sram_data_work(&chip->update_sram_data.work);
@@ -6433,13 +6390,8 @@ static void check_and_update_sram_data(struct fg_chip *chip)
 	else
 		time_left = 0;
 
-	if (charging_detected()) {
-		schedule_delayed_work(
-			&chip->update_temp_work, msecs_to_jiffies(time_left * 1000));
-	} else {
-		queue_delayed_work(system_power_efficient_wq,
-			&chip->update_temp_work, msecs_to_jiffies(time_left * 1000));
-	}
+	schedule_delayed_work(
+		&chip->update_temp_work, msecs_to_jiffies(time_left * 1000));
 
 	next_update_time = chip->last_sram_update_time
 		+ (clamp(fg_sram_update_period_ms, 3000, 30000) / 1000);
@@ -6449,13 +6401,8 @@ static void check_and_update_sram_data(struct fg_chip *chip)
 	else
 		time_left = 0;
 
-	if (charging_detected()) {
-		schedule_delayed_work(
-			&chip->update_sram_data, msecs_to_jiffies(time_left * 1000));
-	} else {
-		queue_delayed_work(system_power_efficient_wq,
-			&chip->update_sram_data, msecs_to_jiffies(time_left * 1000));
-	}
+	schedule_delayed_work(
+		&chip->update_sram_data, msecs_to_jiffies(time_left * 1000));
 }
 
 static int fg_suspend(struct device *dev)
