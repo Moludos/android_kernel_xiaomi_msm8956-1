@@ -73,7 +73,7 @@ fi;
 chmod -R 755 /tmp/anykernel/tools /tmp/anykernel/bin;
 bb=/tmp/anykernel/tools/busybox;
 
-ui_print "Flashing HK kernel";
+ui_print "Flashing Radioactive kernel";
 ui_print " ";
 ui_print " ";
 
