@@ -4,7 +4,13 @@
 #
 
 #
-#Radioactive Setup
+# Radioactive Setup
+#
+CONFIG_SOUND_CONTROL=y
+CONFIG_FB_MSM_MDSS_KCAL_CTRL=y
+
+#
+# Tcp cong algorithms
 #
 CONFIG_TCP_CONG_ADVANCED=y
 CONFIG_TCP_CONG_CUBIC=y
