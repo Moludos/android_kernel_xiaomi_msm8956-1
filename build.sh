@@ -44,8 +44,8 @@
 ###################  MAIN THINGS  ###################
 #####################################################
 ##                                                  ##
-PRONAME="HK"              # Project name.            ##
-VERSION="1.0"             # Version number or name.   ##
+PRONAME="RADIOACTIVE"              # Project name.            ##
+VERSION="TEST"             # Version number or name.   ##
 #                                                      ##
 #               New name = new main folder              ##
 #############################################################
@@ -92,7 +92,7 @@ HOME="$(dirname ~)/$(basename ~)"                           #
 ########################  CONFIGS  ##########################
 #############################################################
 ##                                                          ##
-CONFIG1=hk_defconfig                      # First config     ##
+CONFIG1=radioactive_defconfig             # First config     ##
 CONFIG2=                                  # Second config     ##
 CONFIG3=                                  # Third config       ##
 CONFIG4=                                  # fourth config       ##
@@ -106,12 +106,12 @@ CONFIG5=                                  # fifth config         ##
 ##                                                                 ##
 ARCH=arm64                                       # arch of device  ##
 SUBARCH=arm64                                  # subarch of device ##
-USER=wisniew99                                   # Name of builder ##
-HOST=Harfix-machine                              # name of machine ##
+USER=acuicultor                                  # Name of builder ##
+HOST=NuclearPowerPlant                           # name of machine ##
 TCDIR=$HOME/TC                                   # Toolchain dir   ##
-TCNAME="google-ndk"                              # Toolchain name  ##
-TCEND="bin/aarch64-linux-android-"         # End of toolchain name ##
-TCLIB="lib64/"                                  # lib folder in TC ##
+TCNAME=ubernaro-aarch64-linux-android-4.9        # Toolchain name  ##
+TCEND=bin/aarch64-linux-android-           # End of toolchain name ##
+TCLIB=lib64/                                    # lib folder in TC ##
 ##                                                                 ##
 ##                      ##  TC example:  ##                        ##
 ##                     $TCDIR/$TCNAME/$TCEND                       ##
